@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tsinjo - Fonds d'urgence HEI</title>
+    <style>
+        .transaction-plus { color: green; }
+        .transaction-minus { color: red; }
+        .transaction-status { font-style: italic; }
+    </style>
+</head>
+<body>
+<h1>Tsinjo</h1>
+
+<!-- Formulaire simplifié -->
+<form th:action="@{/donate}" method="post">
+    <input type="email" name="email" placeholder="Email" required>
+    <select name="method" required>
+        <option value="ORANGE_MONEY">Orange Money</option>
+        <option value="AIRTEL_MONEY">Airtel Money</option>
+        <option value="MVOLA">Mvola</option>
+        <option value="CARD">Carte bancaire</option>
+    </select>
+    <input type="text" name="paymentId" placeholder="Référence de paiement" required>
+    <button type="submit">Donner!</button>
+</form>
+
+<h2>Historique</h2>
+<div th:each="tx : ${transactions}">
+    <p th:class="${tx.amount.startsWith('+')} ? 'transaction-plus' : 'transaction-minus'">
+        <span th:text="${tx.amount}"></span>
+        <span th:if="${tx.status}" class="transaction-status"
+              th:text="'(' + ${tx.status} + ', ' + ${tx.method} + ')'"></span>.
+        <span th:text="${#temporals.format(tx.date, 'dd/MM/yyyy')}"></span>.
+        <span th:text="${tx.actor}"></span>
+        <span th:if="${tx.description}" th:text="'. ' + ${tx.description}"></span>
+    </p>
+</div>
+</body>
+</html>
